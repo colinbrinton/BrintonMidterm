@@ -177,7 +177,7 @@ Mail Mail::operator+(int ounces)
 
 ostream& operator<<(ostream& stream, const Mail letter)
 {
-	stream << "Mail Class: " << (letter.type) << endl
+	stream << "Mail Class: " << letter.type << endl
 		   << "Weight: " << (letter.weight) << " oz." << endl
 		   << "Total Cost: $" << letter.getCost() << endl;
 
