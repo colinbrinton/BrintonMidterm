@@ -114,15 +114,11 @@ private:
 	// Class "static, const" Constant Values
 	static const int TYPE_SIZE = 30;
 	static const char FIRST_CLASS[];
-
-	// **** Add any other "static, const" values here ****
 	static const double DFLT_COST;
 	static const int DFLT_WEIGHT;
-	//static const double FIXED;
 
 	// Variable Declarations
 	char type[TYPE_SIZE];	// C-Style "string" array (Required!)
-	//  ****** Add required class data member(s) here ******
 	double perOunceCost;
 	int weight;
 
@@ -135,8 +131,6 @@ const char Mail::FIRST_CLASS[] = "First Class";
 const double Mail::DFLT_COST = 0.49;
 // 3. Default weight
 const int Mail::DFLT_WEIGHT = 1;
-// 4. Fixed cost
-//const double Mail::FIXED = 1.0;
 
 // Define the external methods for class "Mail" here
 
@@ -293,6 +287,13 @@ private:
 
 };
 
+
+
+// Class "static, const" Value Declarations
+// 1. Description of first class mail item
+const char Package::EXPRESS_MAIL[] = "Express Mail";
+
+// Define the external methods for class "Package" here
 Package::Package(double cost, int weight, int days)
 	: Mail(EXPRESS_MAIL, (-cost), weight)
 {
@@ -311,14 +312,6 @@ ostream& operator<<(ostream& stream, const Package package)
 	stream << "Delivery: " << package.days << " days" << endl;
 	return stream;
 }
-
-
-
-// Class "static, const" Value Declarations
-// 1. Description of first class mail item
-const char Package::EXPRESS_MAIL[] = "Express Mail";
-
-// Define the external methods for class "Package" here
 
 
 
