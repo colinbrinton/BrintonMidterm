@@ -106,7 +106,7 @@ public:
 
 	// Observer Methods
 	double getCost() const;
-	void printType() const;
+	Mail printMail() const;
 	friend ostream& operator<<(ostream& stream, const Mail letter);
 	
 
@@ -165,10 +165,10 @@ Mail::Mail(const char* type, double perOunceCost, int weight)
 	}
 	this->type[index] = '\0';
 
-	if (perOunceCost >= NULL)
-		this->perOunceCost = perOunceCost;
-	else
-		this->perOunceCost = abs(perOunceCost);
+	//if (perOunceCost >= NULL)
+	this->perOunceCost = perOunceCost;
+	//else
+	//	this->perOunceCost = abs(perOunceCost);
 	this->weight = weight;
 }
 
@@ -196,9 +196,14 @@ double Mail::getCost() const
 
 }
 
-void Mail::printType() const
+Mail Mail::printMail() const
 {
-	cout << type;
+	cout << "Mail Class: " << type << endl
+		<< "Weight: " << weight << " oz." << endl
+		<< showpoint << fixed << setprecision(2)
+		<< "Total Cost: $" << getCost() << endl;
+
+	return *this;
 }
 
 Mail Mail::operator=(const Mail& rValue)
@@ -302,9 +307,8 @@ Package::Package(const Package& other)
 
 ostream& operator<<(ostream& stream, const Package package)
 {
-	stream << &package
-		   << "Delivery: " << package.days << "days" << endl;
-
+	package.printMail();
+	stream << "Delivery: " << package.days << " days" << endl;
 	return stream;
 }
 
