@@ -63,6 +63,10 @@ using namespace std; // Announces to the compiler that members of the namespace
 *
 * Class Description
 * -----------------
+* Allows for the creation of objects that hold information about the peice of
+* mail to be shipped. Data members include the type of mail service, the weight
+* in oz. of the mail item, and the shipping rate. Provides methods to store, display
+* and modify objects.
 *
 * Class Data Members
 * ------------------
@@ -70,20 +74,26 @@ using namespace std; // Announces to the compiler that members of the namespace
 * ------------  ---------  ------  --------------------------------------------
 * TYPE_SIZE     private    char[]  Size of C-Style array: Mail Type    (static)
 * FIRST_CLASS   private    char[]  C-Style string array: "First Class" (static)
-*                ***** add required data member(s) here *****
+* DFLT_COST     private    double  Default cost for Mail class, $0.49
+* DFLT_WEIGHT   private    int	   Default weight for Mail class, 1 oz.
+* type          private    char[]  Variabe to hold the mail type string (First Class)
+* perOunceCost  private	   double  Variable to hold the cost per ounce shipping rate ($0.49)
+* weight		private	   int	   Variable to hold the object's weight in oz.
 *
 * Class Methods
 * -------------
-*           Name          Scope                   Description
-* ----------------------  ------  --------------------------------------------
-* Mail()                  public  Class Default Constructor: First Class, 1 oz
-* Mail(char*,double,int)  public  Class Initializing Constructor
-* Mail(const Mail&)       public  Class Copy Constructor
-* ~Mail()                 public  Class Destructor
-* getCost()               public  RETurn total cost to mail item
-* operator=(const Mail&)  public  Assignment Operator
-* operator+(int)          public  Addition Operator: Add ounces to item
-* operator<<()            public  Insertion Operator: "string" description
+*           Name				Scope                   Description
+* ----------------------		------  --------------------------------------------
+* Mail()						public  Class Default Constructor: First Class, 1 oz
+* Mail(char*,double,int)		public  Class Initializing Constructor
+* Mail(const Mail&)				public  Class Copy Constructor
+* ~Mail()						public  Class Destructor
+* getCost()						public  RETurn total cost to mail item
+* setType(char*, const char*)	public	Works like strncpy()
+* printMail()					public	Prints the formated information contained in the Mail variables
+* operator=(const Mail&)		public  Assignment Operator
+* operator+(int)				public  Addition Operator: Add ounces to item
+* operator<<()					public  Insertion Operator: "string" description
 *
 ******************************************************************************
 */
@@ -107,7 +117,7 @@ public:
 
 	// Observer Methods
 	double getCost() const;
-	Mail printMail() const;
+	void printMail() const;
 	friend ostream& operator<<(ostream& stream, const Mail letter);
 	
 
@@ -116,7 +126,7 @@ private:
 	static const int TYPE_SIZE = 30;
 	static const char FIRST_CLASS[];
 	static const double DFLT_COST;
-	static const int DFLT_WEIGHT;
+	static const int DFLT_WEIGHT = 1;
 
 	// Variable Declarations
 	char type[TYPE_SIZE];	// C-Style "string" array (Required!)
@@ -130,18 +140,19 @@ private:
 const char Mail::FIRST_CLASS[] = "First Class";
 // 2. Default cost per ounce
 const double Mail::DFLT_COST = 0.49;
-// 3. Default weight
-const int Mail::DFLT_WEIGHT = 1;
 
 // External methods
 
+// Default Constructor
 Mail::Mail()
 {
+	// Use default values to initialize variables
 	setType(type, FIRST_CLASS);
 	perOunceCost = DFLT_COST;
 	weight = DFLT_WEIGHT;
 }
 
+// Initializing constructor
 Mail::Mail(const char* type, double perOunceCost, int weight)
 {
 	setType(this->type, type);
@@ -149,35 +160,40 @@ Mail::Mail(const char* type, double perOunceCost, int weight)
 	this->weight = weight;
 }
 
+// Copy Constructor
 Mail::Mail(const Mail& other)
 {
-	
 	setType(type, other.type);
 	perOunceCost = other.perOunceCost;
 	weight = other.weight;
 }
 
+//Return total cost to ship
 double Mail::getCost() const
 {
 	if (perOunceCost >= NULL)
 		return perOunceCost * weight;
+
+	// Conditioned used by default in the fixed price Package class
 	else
 		return abs(perOunceCost);
 
 }
 
-Mail Mail::printMail() const
+// Method to print the Mail portion of the Package class
+void Mail::printMail() const
 {
 	cout << "Mail Class: " << type << endl
-		<< "Weight: " << weight << " oz." << endl
-		<< showpoint << fixed << setprecision(2)
-		<< "Total Cost: $" << getCost() << endl;
-
-	return *this;
+		 << "Weight: " << weight << " oz." << endl
+		 << showpoint << fixed << setprecision(2)
+		 << "Total Cost: $" << getCost() << endl;
 }
 
+// Works identically to strncpy() - Visual studio will not allow for
+//		use of strncpy without changing the default compiler behavior
 void Mail::setType(char* dest, const char* source)
 {
+	// Copy source to dest
 	int index = NULL;
 	while (source[index] != '\0')
 	{
@@ -185,9 +201,9 @@ void Mail::setType(char* dest, const char* source)
 		index++;
 	}
 	dest[index] = '\0';
-
 }
 
+// Overloaded assingment operator
 Mail Mail::operator=(const Mail& rValue)
 {
 	Mail newMail;
@@ -197,12 +213,14 @@ Mail Mail::operator=(const Mail& rValue)
 	return newMail;
 }
 
+// Overloaded addition operator
 Mail Mail::operator+(int ounces)
 {
 	this->weight += ounces;
 	return *this;
 }
 
+// Overloaded insertion operator
 ostream& operator<<(ostream& stream, const Mail letter)
 {
 	stream << "Mail Class: " << letter.type << endl
@@ -222,12 +240,18 @@ ostream& operator<<(ostream& stream, const Mail letter)
 *
 * Class Description
 * -----------------
+* A specialized verion of its base class, Mail. Defaults to using a fixed pricing system.
+* (Shipping rates by oz. are still possible, but must be entered as negative doubles). Includes
+* the addition of a shipping days data member and uses a modified insertion operator to reflect 
+* this.
 *
 * Class Data Members
 * ------------------
-* Name   Scope    Type                     Description
-* ---- --------- ------ ------------------------------------------------------
-*                ***** add required data member(s) here *****
+* Name			  Scope    Type                     Description
+* ----			--------- ------ ------------------------------------------------------
+* EXPRESS_MAIL	 private  char[]  C-Style string array: "First Class" (static)
+* days			 private  int	  Variable to store the number of shipping days
+*
 *
 * Class Methods
 * -------------
@@ -273,22 +297,30 @@ private:
 // 1. Description of first class mail item
 const char Package::EXPRESS_MAIL[] = "Express Mail";
 
-// Define the external methods for class "Package" here
+// External methods
+
+// Initializing constructor
 Package::Package(double cost, int weight, int days)
-	: Mail(EXPRESS_MAIL, (-cost), weight)
-{
-	this->days = days;
+	: Mail(EXPRESS_MAIL, (-cost), weight)		 // Use Mail initializing constructor, pass cost as negative
+{												 // so that fixed price behavior occurs
+	//Initialize additional data member
+	this->days = days;        
 }
 
+// Copy Constructor
 Package::Package(const Package& other)
-	: Mail(other)
+	: Mail(other)  // Use Mail Copy Constructor
 {
+	// Copy the additional data member
 	days = other.days;
 }
 
+// Overloaded insertion operator
 ostream& operator<<(ostream& stream, const Package package)
 {
+	// Print Mail inherited data members
 	package.printMail();
+	// Print Package data member
 	stream << "Delivery: " << package.days << " days" << endl;
 	return stream;
 }
