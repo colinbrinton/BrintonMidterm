@@ -103,7 +103,7 @@ public:
 	// Mutator Methods
 	Mail operator=(const Mail& rValue);
 	Mail operator+(int ounces);
-	//void setType(const char* dest, const char* source);
+	void setType(char* dest, const char* source);
 
 	// Observer Methods
 	double getCost() const;
@@ -137,29 +137,14 @@ const int Mail::DFLT_WEIGHT = 1;
 
 Mail::Mail()
 {
-	int index = NULL;
-	while (FIRST_CLASS[index] != '\0')
-	{
-		type[index] = FIRST_CLASS[index];
-		index++;
-	}
-	type[index] = '\0';
-	
-
+	setType(type, FIRST_CLASS);
 	perOunceCost = DFLT_COST;
 	weight = DFLT_WEIGHT;
 }
 
 Mail::Mail(const char* type, double perOunceCost, int weight)
 {
-	int index = NULL;
-	while (type[index] != '\0')
-	{
-		this->type[index] = type[index];
-		index++;
-	}
-	this->type[index] = '\0';
-
+	setType(this->type, type);
 	this->perOunceCost = perOunceCost;
 	this->weight = weight;
 }
@@ -167,14 +152,7 @@ Mail::Mail(const char* type, double perOunceCost, int weight)
 Mail::Mail(const Mail& other)
 {
 	
-	int index = NULL;
-	while (other.type[index] != '\0')
-	{
-		type[index] = other.type[index];
-		index++;
-	}
-	type[index] = '\0';
-
+	setType(type, other.type);
 	perOunceCost = other.perOunceCost;
 	weight = other.weight;
 }
@@ -198,30 +176,22 @@ Mail Mail::printMail() const
 	return *this;
 }
 
-//void Mail::setType(const char* dest, const char* source)
-//{
-//	int index = NULL;
-//	while (source[index] != '\0')
-//	{
-//		newMail.type[index] = rValue.type[index];
-//		index++;
-//	}
-//	newMail.type[index] = '\0';
-//
-//}
+void Mail::setType(char* dest, const char* source)
+{
+	int index = NULL;
+	while (source[index] != '\0')
+	{
+		dest[index] = source[index];
+		index++;
+	}
+	dest[index] = '\0';
+
+}
 
 Mail Mail::operator=(const Mail& rValue)
 {
 	Mail newMail;
-
-	int index = NULL;
-	while (rValue.type[index] != '\0')
-	{
-		newMail.type[index] = rValue.type[index];
-		index++;
-	}
-	newMail.type[index] = '\0';
-
+	setType(newMail.type, rValue.type);
 	newMail.perOunceCost = rValue.perOunceCost;
 	newMail.weight = rValue.weight;
 	return newMail;
