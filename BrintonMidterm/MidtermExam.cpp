@@ -106,15 +106,19 @@ public:
 
 	// Observer Methods
 	double getCost() const;
+	void printType() const;
 	friend ostream& operator<<(ostream& stream, const Mail letter);
+	
 
 private:
 	// Class "static, const" Constant Values
 	static const int TYPE_SIZE = 30;
 	static const char FIRST_CLASS[];
+
 	// **** Add any other "static, const" values here ****
 	static const double DFLT_COST;
 	static const int DFLT_WEIGHT;
+	//static const double FIXED;
 
 	// Variable Declarations
 	char type[TYPE_SIZE];	// C-Style "string" array (Required!)
@@ -131,39 +135,84 @@ const char Mail::FIRST_CLASS[] = "First Class";
 const double Mail::DFLT_COST = 0.49;
 // 3. Default weight
 const int Mail::DFLT_WEIGHT = 1;
+// 4. Fixed cost
+//const double Mail::FIXED = 1.0;
 
 // Define the external methods for class "Mail" here
 
 Mail::Mail()
 {
-	type[TYPE_SIZE] = FIRST_CLASS[TYPE_SIZE];
+	int index = NULL;
+	while (FIRST_CLASS[index] != '\0')
+	{
+		type[index] = FIRST_CLASS[index];
+		index++;
+	}
+	type[index] = '\0';
+	
+
 	perOunceCost = DFLT_COST;
 	weight = DFLT_WEIGHT;
 }
 
 Mail::Mail(const char* type, double perOunceCost, int weight)
 {
-	this->type[TYPE_SIZE] = type[TYPE_SIZE];
-	this->perOunceCost = perOunceCost;
+	int index = NULL;
+	while (type[index] != '\0')
+	{
+		this->type[index] = type[index];
+		index++;
+	}
+	this->type[index] = '\0';
+
+	if (perOunceCost >= NULL)
+		this->perOunceCost = perOunceCost;
+	else
+		this->perOunceCost = abs(perOunceCost);
 	this->weight = weight;
 }
 
 Mail::Mail(const Mail& other)
 {
-	type[TYPE_SIZE] = other.type[TYPE_SIZE];
+	
+	int index = NULL;
+	while (other.type[index] != '\0')
+	{
+		type[index] = other.type[index];
+		index++;
+	}
+	type[index] = '\0';
+
 	perOunceCost = other.perOunceCost;
 	weight = other.weight;
 }
 
 double Mail::getCost() const
 {
-	return perOunceCost * weight;
+	if (perOunceCost >= NULL)
+		return perOunceCost * weight;
+	else
+		return abs(perOunceCost);
+
+}
+
+void Mail::printType() const
+{
+	cout << type;
 }
 
 Mail Mail::operator=(const Mail& rValue)
 {
 	Mail newMail;
-	newMail.type[TYPE_SIZE] = rValue.type[TYPE_SIZE];
+
+	int index = NULL;
+	while (FIRST_CLASS[index] != '\0')
+	{
+		newMail.type[index] = rValue.type[index];
+		index++;
+	}
+	newMail.type[index] = '\0';
+
 	newMail.perOunceCost = rValue.perOunceCost;
 	newMail.weight = rValue.weight;
 	return newMail;
@@ -212,39 +261,60 @@ ostream& operator<<(ostream& stream, const Mail letter)
 *
 ******************************************************************************
 */
-//class Package : public Mail
-//{
-//	// Public Interface
-//public:
-//	// Class Constructor(s)
-//	Package(double cost, int weight, int days);
-//	Package(const Package&);
-//
-//	// Class Destructor
-//	~Package()
-//	{ }  // Nothing to do, included for completeness
-//
-//	// Mutator Methods
-//	// None
-//
-//	// Observer Methods
-//	friend ostream& operator<<(ostream& stream, const Package package);
-//
-//private:
-//	// Class static, "const" Constant Values
-//	static const char EXPRESS_MAIL[];
-//
-//	// Variable Declarations
-//	//  ****** Add required class data member(s) here ******
-//
-//};
-//
-//
-//// Class "static, const" Value Declarations
-//// 1. Description of first class mail item
-//const char Package::EXPRESS_MAIL[] = "Express Mail";
-//
-//// Define the external methods for class "Package" here
+class Package : public Mail
+{
+	// Public Interface
+public:
+	// Class Constructor(s)
+	Package(double cost, int weight, int days);
+	Package(const Package&);
+
+	// Class Destructor
+	~Package()
+	{ }  // Nothing to do, included for completeness
+
+	// Mutator Methods
+	// None
+
+	// Observer Methods
+	friend ostream& operator<<(ostream& stream, const Package package);
+
+private:
+	// Class static, "const" Constant Values
+	static const char EXPRESS_MAIL[];
+
+	// Variable Declarations
+	int days;
+
+};
+
+Package::Package(double cost, int weight, int days)
+	: Mail(EXPRESS_MAIL, (-cost), weight)
+{
+	this->days = days;
+}
+
+Package::Package(const Package& other)
+	: Mail(other)
+{
+	days = other.days;
+}
+
+ostream& operator<<(ostream& stream, const Package package)
+{
+	stream << &package
+		   << "Delivery: " << package.days << "days" << endl;
+
+	return stream;
+}
+
+
+
+// Class "static, const" Value Declarations
+// 1. Description of first class mail item
+const char Package::EXPRESS_MAIL[] = "Express Mail";
+
+// Define the external methods for class "Package" here
 
 
 
@@ -288,9 +358,9 @@ int main()
 	// 2. A copy of the default "Mail" object
 	Mail mailItem2(mailItem1);
 	// 3. An object of type "Package"
-	//Package package1(PACKAGE_COST, PACKAGE_WEIGHT, PACKAGE_DELIVERY_TIME);
+	Package package1(PACKAGE_COST, PACKAGE_WEIGHT, PACKAGE_DELIVERY_TIME);
 	// 4. A copy of the "Package" object
-	//Package package2(package1);
+	Package package2(package1);
 
 
 	// Describe the program to the User
@@ -313,13 +383,13 @@ int main()
 	cout << "\n\"mailItem2\", AFTER adding weight to \"mailItem1\":\n"
 		<< mailItem2 << endl;
 
-	//cout << "\n\"package1\":\n" << package1 << endl;
+	cout << "\n\"package1\":\n" << package1 << endl;
 
-	//cout << "\n\"package2\", a copy of \"package1\":\n" << package2 << endl;
+	cout << "\n\"package2\", a copy of \"package1\":\n" << package2 << endl;
 
 	cout << "\nCost of \"mailItem1\": " << mailItem1.getCost() << endl;
 	cout << "Cost of \"mailItem2\": " << mailItem2.getCost() << endl;
-	//cout << "Cost of \"package1\":  " << package1.getCost() << endl;
+	cout << "Cost of \"package1\":  " << package1.getCost() << endl;
 
 
 
