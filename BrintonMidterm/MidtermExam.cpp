@@ -15,7 +15,7 @@
 *
 * Revision     Date                        Release Comment
 * --------  ----------  ------------------------------------------------------
-*   1.0     05/xx/2015  Initial Release
+*   1.0     05/18/2015  Initial Release
 *
 * File Methods
 * ------------
@@ -103,6 +103,7 @@ public:
 	// Mutator Methods
 	Mail operator=(const Mail& rValue);
 	Mail operator+(int ounces);
+	//void setType(const char* dest, const char* source);
 
 	// Observer Methods
 	double getCost() const;
@@ -132,7 +133,7 @@ const double Mail::DFLT_COST = 0.49;
 // 3. Default weight
 const int Mail::DFLT_WEIGHT = 1;
 
-// Define the external methods for class "Mail" here
+// External methods
 
 Mail::Mail()
 {
@@ -159,10 +160,7 @@ Mail::Mail(const char* type, double perOunceCost, int weight)
 	}
 	this->type[index] = '\0';
 
-	//if (perOunceCost >= NULL)
 	this->perOunceCost = perOunceCost;
-	//else
-	//	this->perOunceCost = abs(perOunceCost);
 	this->weight = weight;
 }
 
@@ -200,12 +198,24 @@ Mail Mail::printMail() const
 	return *this;
 }
 
+//void Mail::setType(const char* dest, const char* source)
+//{
+//	int index = NULL;
+//	while (source[index] != '\0')
+//	{
+//		newMail.type[index] = rValue.type[index];
+//		index++;
+//	}
+//	newMail.type[index] = '\0';
+//
+//}
+
 Mail Mail::operator=(const Mail& rValue)
 {
 	Mail newMail;
 
 	int index = NULL;
-	while (FIRST_CLASS[index] != '\0')
+	while (rValue.type[index] != '\0')
 	{
 		newMail.type[index] = rValue.type[index];
 		index++;
