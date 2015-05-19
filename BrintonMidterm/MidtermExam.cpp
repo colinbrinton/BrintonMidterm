@@ -63,7 +63,7 @@ using namespace std; // Announces to the compiler that members of the namespace
 *
 * Class Description
 * -----------------
-* Allows for the creation of objects that hold information about the peice of
+* Allows for the creation of objects that hold information about the piece of
 * mail to be shipped. Data members include the type of mail service, the weight
 * in oz. of the mail item, and the shipping rate. Provides methods to store, display
 * and modify objects.
@@ -76,7 +76,7 @@ using namespace std; // Announces to the compiler that members of the namespace
 * FIRST_CLASS   private    char[]  C-Style string array: "First Class" (static)
 * DFLT_COST     private    double  Default cost for Mail class, $0.49
 * DFLT_WEIGHT   private    int	   Default weight for Mail class, 1 oz.
-* type          private    char[]  Variabe to hold the mail type string (First Class)
+* type          private    char[]  Variable to hold the mail type string (First Class)
 * perOunceCost  private	   double  Variable to hold the cost per ounce shipping rate ($0.49)
 * weight		private	   int	   Variable to hold the object's weight in oz.
 *
@@ -90,7 +90,7 @@ using namespace std; // Announces to the compiler that members of the namespace
 * ~Mail()						public  Class Destructor
 * getCost()						public  RETurn total cost to mail item
 * setType(char*, const char*)	public	Works like strncpy()
-* printMail()					public	Prints the formated information contained in the Mail variables
+* printMail()					public	Prints the formatted information contained in the Mail variables
 * operator=(const Mail&)		public  Assignment Operator
 * operator+(int)				public  Addition Operator: Add ounces to item
 * operator<<()					public  Insertion Operator: "string" description
@@ -119,7 +119,7 @@ public:
 	double getCost() const;
 	void printMail() const;
 	friend ostream& operator<<(ostream& stream, const Mail letter);
-	
+
 
 private:
 	// Class "static, const" Constant Values
@@ -184,9 +184,9 @@ double Mail::getCost() const
 void Mail::printMail() const
 {
 	cout << "Mail Class: " << type << endl
-		 << "Weight: " << weight << " oz." << endl
-		 << showpoint << fixed << setprecision(2)
-		 << "Total Cost: $" << getCost() << endl;
+		<< "Weight: " << weight << " oz." << endl
+		<< showpoint << fixed << setprecision(2)
+		<< "Total Cost: $" << getCost() << endl;
 }
 
 // Works identically to strncpy() - Visual studio will not allow for
@@ -203,7 +203,7 @@ void Mail::setType(char* dest, const char* source)
 	dest[index] = '\0';
 }
 
-// Overloaded assingment operator
+// Overloaded assignment operator
 Mail Mail::operator=(const Mail& rValue)
 {
 	Mail newMail;
@@ -224,8 +224,8 @@ Mail Mail::operator+(int ounces)
 ostream& operator<<(ostream& stream, const Mail letter)
 {
 	stream << "Mail Class: " << letter.type << endl
-		   << "Weight: " << (letter.weight) << " oz." << endl
-		   << "Total Cost: $" << letter.getCost() << endl;
+		<< "Weight: " << (letter.weight) << " oz." << endl
+		<< "Total Cost: $" << letter.getCost() << endl;
 
 	return stream;
 }
@@ -240,9 +240,9 @@ ostream& operator<<(ostream& stream, const Mail letter)
 *
 * Class Description
 * -----------------
-* A specialized verion of its base class, Mail. Defaults to using a fixed pricing system.
+* A specialized version of its base class, Mail. Defaults to using a fixed pricing system.
 * (Shipping rates by oz. are still possible, but must be entered as negative doubles). Includes
-* the addition of a shipping days data member and uses a modified insertion operator to reflect 
+* the addition of a shipping days data member and uses a modified insertion operator to reflect
 * this.
 *
 * Class Data Members
@@ -304,7 +304,7 @@ Package::Package(double cost, int weight, int days)
 	: Mail(EXPRESS_MAIL, (-cost), weight)		 // Use Mail initializing constructor, pass cost as negative
 {												 // so that fixed price behavior occurs
 	//Initialize additional data member
-	this->days = days;        
+	this->days = days;
 }
 
 // Copy Constructor
@@ -411,3 +411,4 @@ int main()
 	return 0;
 
 }	// End method: main()
+
